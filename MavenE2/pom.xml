@@ -9,29 +9,75 @@
   <artifactId>MavenE2</artifactId>
   <version>1.0.0</version>
 
+  <!--
+    Propiedades del proyecto:
+    - Java 17 
+    - JUnit 5 (para pruebas unitarias clásicas)
+    - Cucumber (para BDD con JUnit 5)
+    - Encoding para evitar warnings en build/logs
+  -->
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- agregado para actividad 2  -->
+
     <junit.jupiter.version>5.10.2</junit.jupiter.version>
+    <cucumber.version>7.16.1</cucumber.version> <!-- agregado para actividad 2  -->
   </properties>
 
   <dependencies>
-    <!-- Dependencia JUnit 5 -->
+    <!-- JUnit 5 para pruebas unitarias (Suma/Resta) -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Agregado Cucumber para BDD: implementación de pasos en Java -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!--
+      Cucumber + JUnit 5:
+      Motor de ejecución sobre JUnit Platform.
+      Permite que Surefire descubra y ejecute los .feature a través del runner.
+    -->
+      <!-- Actividad 2 Agregado Motor de ejecución de Cucumber sobre JUnit 5 -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-junit-platform-engine</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <!-- Plugin para ejecutar pruebas -->
+      <!--
+        Surefire 3.x:
+        - Ejecuta JUnit 5 y Cucumber (vía junit-platform).
+        - Con la clase runner (p.ej. cl.evaluacion.runner.CucumberTest)
+          y los tests unitarios regulares en la misma corrida (mvn test).
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
+        <!--
+          Config opcional (no necesaria si tu runner se llama *Test):
+          <configuration>
+            <includes>
+              <include>**/*Test.java</include>
+              <include>**/*Tests.java</include>
+              <include>**/*TestCase.java</include>
+            </includes>
+          </configuration>
+        -->
       </plugin>
     </plugins>
   </build>
