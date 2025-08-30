@@ -21,12 +21,23 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
+      # CAMBIO 1: correr Maven dentro de MavenE2/
       - name: Build & Test (Maven)
-        run: mvn -B clean test
+        working-directory: MavenE2
+        run: mvn -q clean test
 
+      # Agregado: publicar reporte navegable de BDD (Cucumber)
+      - name: Publish Cucumber report (HTML/JSON/XML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report
+          path: MavenE2/target/cucumber-reports/**
+
+      # CAMBIO 2: ajustar la ruta de surefire al subdirectorio
       - name: Publish surefire reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: surefire-reports
-          path: target/surefire-reports/**
+          path: MavenE2/target/surefire-reports/**
